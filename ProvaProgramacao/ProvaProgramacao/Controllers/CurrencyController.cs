@@ -43,11 +43,14 @@ namespace ProvaProgramacao.Controllers
                         {
                             currencyErrorList.Add(currency);
                         }
-                        if(currency.data_inicio == currency.data_fim)
+                        else if(currency.data_inicio == currency.data_fim)
                         {
                             currencyErrorList.Add(currency);
                         }
-                        auxQueue.Enqueue(currency);
+                        else
+                        {
+                            auxQueue.Enqueue(currency);
+                        }
                     }
                     if(auxQueue.Count > 0)
                     {
@@ -150,35 +153,35 @@ namespace ProvaProgramacao.Controllers
                                         _currencyQueueRequests.Enqueue(item);
                                     }
                                     _lastAdd = _currencyQueueRequests.LastOrDefault();
+                                    
+                                    storage.Store("Queue", _currencyQueueRequests);
+                                    storage.Store("LastAdd", _lastAdd);
                                 }
                                 else
                                 {
-                                    _lastAdd = null;
-                                    _currencyQueueRequests = null;
+                                    storage.Clear();
                                 }
 
-                                storage.Store("Queue", _currencyQueueRequests);
-                                storage.Store("LastAdd", _lastAdd);
                                 storage.Persist();
 
                                 return new ObjectResult(currency);
                             }
                             else
                             {
-                                return BadRequest("Não existe objeto a ser retornado");
+                                return new ObjectResult(null);
                             }
                         }
                     }
                     else
                     {
-                        return BadRequest("Nenhum objeto armazenado");
+                        return new ObjectResult(null);
                     }
                 }
             }catch(Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ObjectResult(null);
             }
-            return NotFound();
+            return new ObjectResult(null);
         }
     }
 }

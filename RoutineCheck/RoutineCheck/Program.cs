@@ -7,7 +7,10 @@ namespace RoutineCheck
     {
         static void Main(string[] args)
         {
-            Routine.GetItemApi();
+            while (true)
+            {
+                Routine.Initialize();
+            }
         }
     }
 }
