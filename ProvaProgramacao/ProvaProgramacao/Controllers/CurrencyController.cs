@@ -29,6 +29,7 @@ namespace ProvaProgramacao.Controllers
         [Route("AddItemFila")]
         public IActionResult AddItemFila([FromBody] List<Currency> currencyListRequest)
         {
+
             List<Currency> currencyErrorList = new List<Currency>();
             Queue<Currency> auxQueue = new Queue<Currency>();
             string errorMessage = string.Empty;
@@ -148,14 +149,16 @@ namespace ProvaProgramacao.Controllers
                                     {
                                         _currencyQueueRequests.Enqueue(item);
                                     }
-                                    _currencyQueueRequests.Enqueue(currency);
+                                    _lastAdd = _currencyQueueRequests.LastOrDefault();
                                 }
                                 else
                                 {
-                                    _currencyQueueRequests.Enqueue(currency);
+                                    _lastAdd = null;
+                                    _currencyQueueRequests = null;
                                 }
 
                                 storage.Store("Queue", _currencyQueueRequests);
+                                storage.Store("LastAdd", _lastAdd);
                                 storage.Persist();
 
                                 return new ObjectResult(currency);
